@@ -1,0 +1,4 @@
+API_KEY = "aGkDMp03DA5FxLQyuIgI77VK"
+SECRET_KEY = "N1UHtOBEGwnWRAMPbnrTodGVmZhM5RaM"
+username = "2020070105"
+password = "27001X"
