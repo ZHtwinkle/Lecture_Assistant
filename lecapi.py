@@ -10,9 +10,7 @@ from lec import get_session_id
 db = TinyDB('myproject.json')
 
 def check(s):
-    # 定义正则表达式
     pattern = r'^<script\b[^>]*>.*?</script>$'
-    # 使用 re.match 判断是否匹配
     return bool(re.match(pattern, s, re.DOTALL))
 
 
@@ -50,15 +48,12 @@ while True:
     response = get_data(Session_id)
     html_code = response.text.strip()
     while check(html_code):
-        # print("+", html_code, "+")
         Session_id = get_session_id()
         response = get_data(Session_id)
         html_code = response.text.strip()
-    # print("+", html_code, "+")  # [:500])
     soup = BeautifulSoup(html_code, 'html.parser')
 
     rows = soup.find_all('tr')
-#    print(rows)
     data = []
     for row in rows:
         cells = row.find_all('td')
