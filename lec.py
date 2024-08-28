@@ -1,14 +1,16 @@
-from DrissionPage import ChromiumPage
 import base64
-from PIL import Image
-from io import BytesIO
-from bd_api import get_code
 import time
+from io import BytesIO
+
+from DrissionPage import ChromiumPage
+from PIL import Image
+
 import config
+from bd_api import get_code
 
 
 def get_session_id():
-    page = ChromiumPage() 
+    page = ChromiumPage()
     flag = True
     while flag:
         try:

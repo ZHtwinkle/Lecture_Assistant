@@ -1,6 +1,8 @@
 import requests
 
-bot_url = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=6e39100a-d905-4950-90fa-bdd035565197"
+import config
+
+bot_url = f"https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key={config.WECOM_KEY}"
 headers = {'Content-Type': 'application/json; charset=UTF-8'}
 
 
@@ -17,4 +19,3 @@ def bot_say():
 
     }
     requests.post(url=bot_url, json=json, headers=headers)
-

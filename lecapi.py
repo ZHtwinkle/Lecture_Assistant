@@ -1,13 +1,16 @@
-import requests
-import time
-from bs4 import BeautifulSoup
-import re
 import random
-from bot_send_content import bot_say
+import re
+import time
+
+import requests
+from bs4 import BeautifulSoup
 from tinydb import TinyDB, Query
+
+from bot_send_content import bot_say
 from lec import get_session_id
 
 db = TinyDB('myproject.json')
+
 
 def check(s):
     pattern = r'^<script\b[^>]*>.*?</script>$'
@@ -15,7 +18,6 @@ def check(s):
 
 
 def get_data(session_node_id):
-
     url1 = "http://sjcx.buct.edu.cn/practiceext/practiceextAction/project.action"
     url2 = "http://sjcx.buct.edu.cn/aexp/stuLeft.jsp"
     url = 'http://sjcx.buct.edu.cn/practiceext/practiceextAction/practiceext/practiceextAction/choise.action'
@@ -33,44 +35,48 @@ def get_data(session_node_id):
         'Upgrade-Insecure-Requests': '1',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/123.0.0.0'
     }
-    response_ = requests.get(url, headers=headers)#,proxies=Proxy)
+    response_ = requests.get(url, headers=headers)  # ,proxies=Proxy)
     return response_
 
 
-Session_id = get_session_id()
-print("Session_id = ", Session_id)
-while True:
-    xxx = random.randint(1, 3000)
-    if xxx < 10:
-        print(f"xxx={xxx},Session_id失效")
-        bot_say()
-        Session_id = "11111"
-    response = get_data(Session_id)
-    html_code = response.text.strip()
-    while check(html_code):
-        Session_id = get_session_id()
-        response = get_data(Session_id)
+def start():
+    session_id = get_session_id()
+    print("session_id = ", session_id)
+    while True:
+        xxx = random.randint(1, 3000)
+        if xxx < 10:
+            print(f"xxx={xxx},Session_id失效")
+            bot_say()
+            session_id = "11111"
+        response = get_data(session_id)
         html_code = response.text.strip()
-    soup = BeautifulSoup(html_code, 'html.parser')
+        while check(html_code):
+            session_id = get_session_id()
+            response = get_data(session_id)
+            html_code = response.text.strip()
+        soup = BeautifulSoup(html_code, 'html.parser')
 
-    rows = soup.find_all('tr')
-    data = []
-    for row in rows:
-        cells = row.find_all('td')
-        data.append([cell.text.strip() for cell in cells])
-    print("xxx=", xxx, data)
-    new_data = []
-    for row in data:
-        if row:
-            lec_keys = ["name", "patch", "begin_time", "end_time", "teacher", "qr_code", "operate"]
-            data_dict = dict(zip(lec_keys, row))
-            new_data.append(data_dict)
-    Lecture = Query()
-    for entry in new_data:
-        # 新增逻辑
-        # db.insert(entry)
-        # 更新逻辑
-        db.update(entry, Lecture.name == entry["operate"])
+        rows = soup.find_all('tr')
+        data = []
+        for row in rows:
+            cells = row.find_all('td')
+            data.append([cell.text.strip() for cell in cells])
+        print("xxx=", xxx, data)
+        new_data = []
+        for row in data:
+            if row:
+                lec_keys = ["name", "patch", "begin_time", "end_time", "teacher", "qr_code", "operate"]
+                data_dict = dict(zip(lec_keys, row))
+                new_data.append(data_dict)
+        lecture = Query()
+        for entry in new_data:
+            # 新增逻辑
+            # db.insert(entry)
+            # 更新逻辑
+            db.update(entry, lecture.name == entry["operate"])
 
-    time.sleep(2)
+        time.sleep(2)
 
+
+if __name__ == '__main__':
+    start()

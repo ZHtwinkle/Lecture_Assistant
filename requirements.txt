@@ -1,0 +1,5 @@
+DrissionPage~=4.0.5.6
+pillow~=10.4.0
+requests~=2.32.3
+beautifulsoup4~=4.12.3
+tinydb~=4.8.0
