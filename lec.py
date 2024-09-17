@@ -6,7 +6,7 @@ from DrissionPage import ChromiumPage
 from PIL import Image
 
 import config
-from bd_api import get_code
+from code_api import get_code
 
 
 def get_session_id():
@@ -21,7 +21,7 @@ def get_session_id():
             image_data = base64.b64decode(base64_string)
             img = Image.open(BytesIO(image_data))
             img.save('output_image.png')
-            validate_code = get_code()
+            validate_code = get_code('output_image.png')
             print(validate_code)
             username = config.username
             password = config.password
